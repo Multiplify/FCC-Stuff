@@ -1,0 +1,21 @@
+// https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/javascript-algorithms-and-data-structures-projects/telephone-number-validator
+// Code to find the solution for this challenge
+
+function telephoneCheck(str) {
+  let length = str;
+  length = length.replace(/\D+/ig, "").trim();
+  //Checks the number of actual digits and digits only in the string. More than 11 or less than 10 indicate non valid number.
+  if (length.length > 11 || length.length < 10){
+    return false;
+  }
+  // List of regex that will satisfy their requirements to find only number that are valid US telephone numbers.
+  if((/^\d{10}$/).test(str) || (/^\(\d{3}\)\d{3}\-\d{4}$/).test(str) || (/^[1]\s\d{3}\-\d{3}\-\d{4}$/).test(str) || 
+  (/^[1]\s\(\d{3}\)\s\d{3}\-\d{4}$/).test(str) || (/^\d{3}\-\d{3}\-\d{4}$/).test(str) || (/^[1]\(\d{3}\)\d{3}\-\d{4}$/).test(str) || (/^[1]\s\d{3}\s\d{3}\s\d{4}$/).test(str) ) {
+
+    //(/^[1]\s\d{3}\s\d{3}\s\d{4}$/).test(str)
+    return true;
+  }
+  return false;
+}
+
+telephoneCheck("555-555-5555");
