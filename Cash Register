@@ -1,0 +1,92 @@
+// Solution to the cash register problem on FCC found here https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/javascript-algorithms-and-data-structures-projects/cash-register
+
+function checkCashRegister(price, cash, cid) {
+  let denominationArray = [.01, .05, .10, .25, 1, 5, 10, 20, 100];
+  let revDenomArray = [100, 20, 10, 5, 1, 0.25, 0.1, 0.05, 0.01];
+  let cashbackArray = []
+  let change = (cash - price) * 100;
+  let coinArray = [];
+  let cid2 = [];
+  let returnObj ={
+  		status: "",
+      change: []
+  };
+  let totalCID = 0;
+	for (let i = 0; i < cid.length; i++){
+  		totalCID += (cid[i][1]* 100)
+  }
+  //Gets the total amount of cash in the drawer.
+  totalCID = totalCID;
+  
+  if(totalCID == change){
+  	returnObj.status = "CLOSED"
+    returnObj.change = cid
+    return returnObj;
+  }
+  
+  revDenomArray = revDenomArray.map(ele => ele*100)
+  denominationArray = denominationArray.map(ele => ele*100)
+
+  
+  
+  // Adds the number of each type of coin to an array for easy counting. (Twice, second array can be used to subtract from first for total count at the end)
+  for (let i = 0; i<denominationArray.length; i++){
+  		coinArray.push(Math.round((cid[i][1] * 100)/(denominationArray[i])))
+      cashbackArray.push(Math.round((cid[i][1] * 100)/(denominationArray[i])))
+  }
+  coinArray = coinArray.reverse();
+  // If you can subratct the denomination from the amount and it's above zero, try it again
+	for (let i = 0; i < revDenomArray.length; i++){
+  		while(change - revDenomArray[i] >= 0 && coinArray[i] > 0){
+      	change = Math.round(change - revDenomArray[i]);
+        coinArray[i]--;
+      }
+  }
+  coinArray.reverse();
+
+  for (let i = 0; i<denominationArray.length; i++){
+  		cid[i][1] = (((coinArray[i]*denominationArray[i])/100))
+  }
+  
+
+  for(let i = 0; i < cashbackArray.length; i++){
+  		cashbackArray[i] = cashbackArray[i] - coinArray[i];
+      cid[i][1] = ((cashbackArray[i]*denominationArray[i])/100)
+      }
+  
+for (let i = 0; i < cid.length; i++){
+		if(cid[i][1] != 0){
+    cid2.unshift(cid.slice(i, i+1))
+    }
+}
+cid2 = cid2.flat()
+
+if (change == 0){
+  returnObj.status = "OPEN";
+  returnObj.change = cid2;
+ } else if (change != 0){
+ 	returnObj.status = "INSUFFICIENT_FUNDS";
+ 	returnObj.change = [];
+ }
+
+  
+  
+  
+  
+	
+  
+  return returnObj;
+}
+
+
+checkCashRegister(19.5, 20, [
+  ["PENNY", 1.01],
+  ["NICKEL", 2.05],
+  ["DIME", 3.1],
+  ["QUARTER", 4.25],
+  ["ONE", 90],
+  ["FIVE", 55],
+  ["TEN", 20],
+  ["TWENTY", 60],
+  ["ONE HUNDRED", 100]
+]);
